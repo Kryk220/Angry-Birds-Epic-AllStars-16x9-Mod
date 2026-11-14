@@ -1,4 +1,6 @@
-# Angry Birds Epic All Stars — 16:9 Aspect Ratio Mod
+# Angry Birds Epic — 16:9 Widescreen Mod
+
+![Angry Birds Epic 16:9 Mod Preview](preview.png)
 
 **English** | [Русский](#русский)
 
