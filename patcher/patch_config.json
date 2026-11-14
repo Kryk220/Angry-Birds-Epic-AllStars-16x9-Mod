@@ -1,0 +1,31 @@
+{
+  "name": "Angry Birds Epic 16:9 / Widescreen Mod",
+  "baseApk": {
+    "fileName": "All Stars 1.2.8.1.apk",
+    "versionName": "3.0.27463.4823",
+    "versionCode": 4823
+  },
+  "library": "lib/arm64-v8a/libil2cpp.so",
+  "manifest": {
+    "metaDataName": "android.max_aspect",
+    "value": "1.778"
+  },
+  "patches": [
+    {
+      "name": "UnityEngine.Screen.get_width",
+      "offset": 39948328,
+      "offsetHex": "0x2619028",
+      "original": "FE4FBFA9D31F0090",
+      "patched": "00F08052C0035FD6",
+      "description": "MOVZ W0, #1920 ; RET - reports a 1920 px wide reference screen to the game."
+    },
+    {
+      "name": "UnityEngine.Screen.get_height",
+      "offset": 39948368,
+      "offsetHex": "0x2619050",
+      "original": "FE4FBFA9D31F0090",
+      "patched": "00878052C0035FD6",
+      "description": "MOVZ W0, #1080 ; RET - reports a 1080 px tall reference screen to the game."
+    }
+  ]
+}
