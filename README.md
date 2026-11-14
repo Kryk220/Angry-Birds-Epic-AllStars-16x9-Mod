@@ -1,6 +1,6 @@
 # Angry Birds Epic — 16:9 Widescreen Mod
 
-![Angry Birds Epic 16:9 Mod Preview](docs/preview.png)
+![Angry Birds Epic 16:9 Mod Preview](docs/preview.jpg)
 
 **English** | [Русский](#русский)
 
