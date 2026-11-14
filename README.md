@@ -4,53 +4,63 @@
 
 An unofficial client-side patch that forces **Angry Birds Epic** to run in a standard **16:9** aspect ratio (1920×1080 reference) on modern widescreen phones (such as 20:9 displays). Instead of stretching or breaking the layout across ultra-wide screens, the game runs cleanly in a fixed 16:9 frame (with standard black side bars on 20:9 panels), fixing UI and camera bugs.
 
-> ⚠️ **Disclaimer:** I am a beginner in coding and reverse engineering. This mod was created using **AI-assisted development ("vibe coding")**. While it has been tested and works as intended, minor visual glitches or edge cases may still occur. Feedback, issues, and pull requests are welcome!
-
-> No game assets or APKs are distributed in this repository. The patcher only modifies a copy of the game that you already own.
-
----
+> ⚠️ **Disclaimer:** I am a beginner in coding and reverse engineering. This mod was created using **AI-assisted development ("vibe coding")**. It has been tested and works as intended, though minor visual glitches or edge cases may still occur. Please note that **this project is provided "as is" and I do not plan to update or maintain it further**.
 
 ## English
 
 ### What it fixes
 
-- **Forced 16:9 aspect ratio on modern screens** — locks the game to a standard 16:9 frame (with clean black side bars on 20:9 displays) instead of trying to stretch across ultra-wide panels.
-- **Correct UI scaling** — HUD, cards, buttons, and battle UI stay properly positioned inside the 16:9 frame and keep their proportions instead of stretching or clipping.
-- **Correct camera viewport** — fixes camera zoom and cropping issues caused by a mismatch between the render resolution and tall display aspect ratios.
-- **Stable 1920×1080 reference resolution** — makes Unity's `Screen.width` / `Screen.height` return `1920×1080`, the values expected by the game's `CameraResolutionMgr` for proper layout.
-- **No gameplay changes** — visuals and aspect ratio only; progression, saves, and balance remain untouched.
+* **Forced 16:9 aspect ratio on modern screens** — locks the game to a standard 16:9 frame (with clean black side bars on 20:9 displays) instead of trying to stretch across ultra-wide panels.
+
+* **Correct UI scaling** — HUD, cards, buttons, and battle UI stay properly positioned inside the 16:9 frame and keep their proportions instead of stretching or clipping.
+
+* **Correct camera viewport** — fixes camera zoom and cropping issues caused by a mismatch between the render resolution and tall display aspect ratios.
+
+* **Stable 1920×1080 reference resolution** — makes Unity's `Screen.width` / `Screen.height` return `1920×1080`, the values expected by the game's `CameraResolutionMgr` for proper layout.
+
+* **No gameplay changes** — visuals and aspect ratio only; progression, saves, and balance remain untouched.
 
 ### Tested compatibility
 
-| | |
-| --- | --- |
-| Base game | Angry Birds Epic All Stars 1.2.8.1 |
-| versionCode / versionName | `4823` / `3.0.27463.4823` |
-| Test device | POCO F6 |
-| OS | Android 16 (HyperOS) |
-| ABI | `arm64-v8a` (64-bit) |
-| Minimum Android | 8.0 / API 25 |
-| Test result | **20+ levels completed**, stable, no crashes, no UI clipping |
+|  |  | 
+| ----- | ----- | 
+| Base game | Angry Birds Epic All Stars 1.2.8.1 | 
+| versionCode / versionName | `4823` / `3.0.27463.4823` | 
+| Test device | POCO F6 | 
+| OS | Android 16 (HyperOS) | 
+| ABI | `arm64-v8a` (64-bit) | 
+| Minimum Android | 8.0 / API 25 | 
+| Test result | **20+ levels completed**, stable, no crashes, no UI clipping | 
 
 The `armeabi-v7a` library is left untouched; use a 64-bit device.
 
 ### Installation
 
-1. Download the APK from the [Releases](../../releases) page. Prebuilt APKs are not stored in git.
+1. Download the prebuilt APK directly from this repository or from the [Releases](../../releases) page.
+
 2. Uninstall any existing version (such as the Google Play version) first — it is signed with a different key.
+
 3. Allow installation from unknown sources for your file manager or browser.
+
 4. Install and launch the game.
+
 5. On tall 20:9 phones, keep the app in standard 16:9 / non-stretched mode if your system tries to force full-screen stretching (HyperOS: Settings → Display → Full screen mode → disable forced stretching for Angry Birds Epic).
 
-### Build from the original APK
+### Build from the original APK (Optional)
+
+If you prefer to patch your own APK file manually, build scripts are included in the repository:
 
 #### Requirements
 
-- Windows 10/11, PowerShell 5.1+
-- Java JDK 17+ (Temurin recommended)
-- apktool 2.9.3
-- uber-apk-signer 1.3.0
-- Original APK: `All Stars 1.2.8.1.apk` (versionCode 4823)
+* Windows 10/11, PowerShell 5.1+
+
+* Java JDK 17+ (Temurin recommended)
+
+* apktool 2.9.3
+
+* uber-apk-signer 1.3.0
+
+* Original APK: `All Stars 1.2.8.1.apk` (versionCode 4823)
 
 `apktool` and `uber-apk-signer` are downloaded automatically. If Java is missing, the helper script installs a portable JDK 17.
 
@@ -71,7 +81,7 @@ powershell -ExecutionPolicy Bypass -File .\patcher\build.ps1 `
 
 Output:
 
-```
+```text
 release_build\AngryBirdsEpic_16x9_signed.apk
 ```
 
@@ -93,11 +103,11 @@ release_build\AngryBirdsEpic_16x9_signed.apk
 
 #### What the patcher changes
 
-| Target | Address | Change |
-| --- | --- | --- |
-| `UnityEngine.Screen.get_width` | `0x2619028` | `MOVZ W0, #1920; RET` |
-| `UnityEngine.Screen.get_height` | `0x2619050` | `MOVZ W0, #1080; RET` |
-| `AndroidManifest.xml` | `<application>` | adds `android.max_aspect = 1.778` |
+| Target | Address | Change | 
+| ----- | ----- | ----- | 
+| `UnityEngine.Screen.get_width` | `0x2619028` | `MOVZ W0, #1920; RET` | 
+| `UnityEngine.Screen.get_height` | `0x2619050` | `MOVZ W0, #1080; RET` | 
+| `AndroidManifest.xml` | `<application>` | adds `android.max_aspect = 1.778` | 
 
 The original bytes are checked before patching, so an unsupported APK version is rejected instead of producing a broken build. Technical details: [`patcher/README.md`](patcher/README.md).
 
@@ -111,12 +121,11 @@ This omits the `1.778` (16:9) max aspect declaration while keeping the `1920×10
 
 ### Repository layout
 
-```
+```text
 .
 ├── patcher/            Portable build scripts and patch definition
 │   └── analysis/       Optional reverse-engineering helpers
 ├── docs/               Screenshots and extra documentation
-├── release_build/      Local output folder (git-ignored)
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -124,77 +133,88 @@ This omits the `1.778` (16:9) max aspect declaration while keeping the `1920×10
 
 ### Troubleshooting
 
-| Problem | Solution |
-| --- | --- |
-| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Uninstall the existing/Play Store version; the signatures differ. |
-| `App not installed` | Check free space (~600 MB), Android 8+ and a 64-bit device. |
-| `Java was not found` | Install JDK 17 or run `.\patcher\install_jdk.ps1`. |
-| `Unexpected bytes at 0x...` | Your APK is a different build. Use versionCode 4823 / 1.2.8.1. |
-| Scripts are blocked | Run PowerShell with `-ExecutionPolicy Bypass`. |
-| UI still stretches on 20:9 | Disable forced full-screen mode for the app in system display settings. |
+| Problem | Solution | 
+| ----- | ----- | 
+| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Uninstall the existing/Play Store version; the signatures differ. | 
+| `App not installed` | Check free space (~600 MB), Android 8+ and a 64-bit device. | 
+| `Java was not found` | Install JDK 17 or run `.\patcher\install_jdk.ps1`. | 
+| `Unexpected bytes at 0x...` | Your APK is a different build. Use versionCode 4823 / 1.2.8.1. | 
+| Scripts are blocked | Run PowerShell with `-ExecutionPolicy Bypass`. | 
+| UI still stretches on 20:9 | Disable forced full-screen mode for the app in system display settings. | 
 
 ### Legal
 
-This is an unofficial fan project and is not affiliated with, endorsed by, or sponsored by Rovio Entertainment or SEGA. Angry Birds and all related names, characters and assets are trademarks of their respective owners.
-
-No game assets or APKs are distributed in this repository. The patcher only modifies a copy of the game that you already own. Use at your own risk.
+This is an unofficial fan project and is not affiliated with, endorsed by, or sponsored by Rovio Entertainment or SEGA. Angry Birds and all related names, characters and assets are trademarks of their respective owners. Use at your own risk.
 
 ### Credits
 
-- [apktool](https://github.com/iBotPeaches/Apktool) — APK decoding and rebuilding
-- [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer) — zipalign and signing
-- [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) — IL2CPP analysis
+* [apktool](https://github.com/iBotPeaches/Apktool) — APK decoding and rebuilding
+
+* [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer) — zipalign and signing
+
+* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) — IL2CPP analysis
 
 ---
 
-<a id="русский"></a>
 ## Русский
 
 Неофициальный клиентский патч, который заставляет **Angry Birds Epic** работать в классическом соотношении сторон **16:9** (опорное разрешение 1920×1080) на современных вытянутых экранах (например, 20:9). Вместо того чтобы растягиваться и ломать вёрстку на нестандартных дисплеях, игра запускается в чёткой рамке 16:9 (с аккуратными чёрными полосами по бокам на экранах 20:9), благодаря чему полностью исправляются баги интерфейса и камеры.
 
-> ⚠️ **Важно (Дисклеймер):** Я не профессиональный программист и только набираюсь опыта в кодинге и реверс-инжиниринге. Этот мод был написан при активной помощи **ИИ (вайбкодинг / vibe coding)**. Патч проверен и работает стабильно, но в редких случаях могут встречаться мелкие визуальные неточности. Буду рад любым отзывам и баг-репортам во вкладке *Issues*!
-
-> В репозитории не распространяются игровые ресурсы или APK. Патчер изменяет только копию игры, которая уже есть у вас.
+> ⚠️ **Важно (Дисклеймер):** Я не профессиональный программист и только набираюсь опыта в кодинге и реверс-инжиниринге. Этот мод был написан при активной помощи **ИИ (вайбкодинг / vibe coding)**. Патч проверен и работает стабильно, хотя в редких случаях могут встречаться мелкие визуальные неточности. Обратите внимание: **мод выложен «как есть» (as is), и я не планирую его обновлять или дорабатывать в будущем**.
 
 ### Что исправляет мод
 
-- **Принудительная работа в 16:9 на современных экранах** — фиксирует игру в стандартном соотношении сторон 16:9 (на вытянутых экранах 20:9 появляются стандартные чёрные полосы по бокам, чтобы картинка не искажалась).
-- **Корректное масштабирование UI** — HUD, карточки, кнопки и боевой интерфейс остаются строго внутри экрана, не растягиваются и не обрезаются по краям.
-- **Исправление камеры и обзора** — устраняет неправильный зум и обрезание игрового мира, возникающие из-за несовпадения рендера и вытянутого экрана.
-- **Стабильное опорное разрешение 1920×1080** — патч заставляет `UnityEngine.Screen.width` и `Screen.height` возвращать `1920×1080` — именно эти значения использует `CameraResolutionMgr` для корректной раскладки UI и камер.
-- **Геймплей не меняется** — исправляется только отображение и соотношение сторон; прогресс, сохранения и баланс остаются прежними.
+* **Принудительная работа в 16:9 на современных экранах** — фиксирует игру в стандартном соотношении сторон 16:9 (на вытянутых экранах 20:9 появляются стандартные чёрные полосы по бокам, чтобы картинка не искажалась).
+
+* **Корректное масштабирование UI** — HUD, карточки, кнопки и боевой интерфейс остаются строго внутри экрана, не растягиваются и не обрезаются по краям.
+
+* **Исправление камеры и обзора** — устраняет неправильный зум и обрезание игрового мира, возникающие из-за несовпадения рендера и вытянутого экрана.
+
+* **Стабильное опорное разрешение 1920×1080** — патч заставляет `UnityEngine.Screen.width` и `Screen.height` возвращать `1920×1080` — именно эти значения использует `CameraResolutionMgr` для корректной раскладки UI и камер.
+
+* **Геймплей не меняется** — исправляется только отображение и соотношение сторон; прогресс, сохранения и баланс остаются прежними.
 
 ### Проверенная совместимость
 
-| | |
-| --- | --- |
-| Базовая игра | Angry Birds Epic All Stars 1.2.8.1 |
-| versionCode / versionName | `4823` / `3.0.27463.4823` |
-| Тестовое устройство | POCO F6 |
-| ОС | Android 16 (HyperOS) |
-| ABI | `arm64-v8a` (64-bit) |
-| Минимальный Android | 8.0 / API 25 |
-| Результат теста | **пройдено 20+ уровней**, стабильно, без вылетов и обрезания UI |
+|  |  | 
+| ----- | ----- | 
+| Базовая игра | Angry Birds Epic All Stars 1.2.8.1 | 
+| versionCode / versionName | `4823` / `3.0.27463.4823` | 
+| Тестовое устройство | POCO F6 | 
+| ОС | Android 16 (HyperOS) | 
+| ABI | `arm64-v8a` (64-bit) | 
+| Минимальный Android | 8.0 / API 25 | 
+| Результат теста | **пройдено 20+ уровней**, стабильно, без вылетов и обрезания UI | 
 
 Библиотека `armeabi-v7a` не изменяется — используйте 64-битное устройство.
 
 ### Установка
 
-1. Скачайте готовый APK из раздела [Releases](../../releases). Готовые APK не хранятся в git.
+1. Скачайте готовый APK-файл прямо из этого репозитория или из раздела [Releases](../../releases).
+
 2. Предварительно удалите уже установленную версию игры (например, из Google Play), так как у них разные цифровые подписи.
+
 3. Разрешите установку приложений из неизвестных источников для вашего файлового менеджера или браузера.
+
 4. Установите и запустите игру.
+
 5. На вытянутых экранах 20:9 убедитесь, что система не пытается принудительно растянуть игру за пределы 16:9 (в HyperOS: Настройки → Экран → Полноэкранный режим → отключите принудительное растягивание для Angry Birds Epic).
 
-### Сборка мода из оригинального APK
+### Сборка мода из оригинального APK (необязательно)
+
+Если вы хотите самостоятельно пропатчить свой APK-файл, в репозитории приложены скрипты сборки:
 
 #### Требования
 
-- Windows 10/11, PowerShell 5.1+
-- Java JDK 17+ (рекомендуется Temurin)
-- apktool 2.9.3
-- uber-apk-signer 1.3.0
-- Оригинальный APK: `All Stars 1.2.8.1.apk` (versionCode 4823)
+* Windows 10/11, PowerShell 5.1+
+
+* Java JDK 17+ (рекомендуется Temurin)
+
+* apktool 2.9.3
+
+* uber-apk-signer 1.3.0
+
+* Оригинальный APK: `All Stars 1.2.8.1.apk` (versionCode 4823)
 
 `apktool` и `uber-apk-signer` скачиваются автоматически. Если Java не установлена, вспомогательный скрипт поставит портативный JDK 17.
 
@@ -215,7 +235,7 @@ powershell -ExecutionPolicy Bypass -File .\patcher\build.ps1 `
 
 Результат:
 
-```
+```text
 release_build\AngryBirdsEpic_16x9_signed.apk
 ```
 
@@ -237,11 +257,11 @@ release_build\AngryBirdsEpic_16x9_signed.apk
 
 #### Что именно изменяет патчер
 
-| Цель | Адрес | Изменение |
-| --- | --- | --- |
-| `UnityEngine.Screen.get_width` | `0x2619028` | `MOVZ W0, #1920; RET` |
-| `UnityEngine.Screen.get_height` | `0x2619050` | `MOVZ W0, #1080; RET` |
-| `AndroidManifest.xml` | `<application>` | добавляется `android.max_aspect = 1.778` |
+| Цель | Адрес | Изменение | 
+| ----- | ----- | ----- | 
+| `UnityEngine.Screen.get_width` | `0x2619028` | `MOVZ W0, #1920; RET` | 
+| `UnityEngine.Screen.get_height` | `0x2619050` | `MOVZ W0, #1080; RET` | 
+| `AndroidManifest.xml` | `<application>` | добавляется `android.max_aspect = 1.778` | 
 
 Перед записью патчер сверяет оригинальные байты. Если APK другой версии, сборка прерывается — испорченный файл не создаётся. Подробности: [`patcher/README.md`](patcher/README.md).
 
@@ -255,12 +275,11 @@ release_build\AngryBirdsEpic_16x9_signed.apk
 
 ### Структура репозитория
 
-```
+```text
 .
 ├── patcher/            Переносимые скрипты сборки и описание патча
 │   └── analysis/       Дополнительные утилиты реверс-инжиниринга
 ├── docs/               Скриншоты и документация
-├── release_build/      Локальная папка с APK (игнорируется git)
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -268,23 +287,23 @@ release_build\AngryBirdsEpic_16x9_signed.apk
 
 ### Решение проблем
 
-| Проблема | Решение |
-| --- | --- |
-| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Удалите старую версию/версию из Play Store — подписи различаются. |
-| `Приложение не установлено` | Проверьте свободное место (~600 МБ), Android 8+ и 64-битное устройство. |
-| `Java was not found` | Установите JDK 17 или запустите `.\patcher\install_jdk.ps1`. |
-| `Unexpected bytes at 0x...` | APK другой сборки. Нужна версия 1.2.8.1 / versionCode 4823. |
-| Скрипты заблокированы | Запускайте PowerShell с `-ExecutionPolicy Bypass`. |
-| Интерфейс всё равно растягивается на 20:9 | Отключите принудительный полноэкранный режим для игры в настройках экрана. |
+| Проблема | Решение | 
+| ----- | ----- | 
+| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Удалите старую версию/версию из Play Store — подписи различаются. | 
+| `Приложение не установлено` | Проверьте свободное место (~600 МБ), Android 8+ и 64-битное устройство. | 
+| `Java was not found` | Установите JDK 17 или запустите `.\patcher\install_jdk.ps1`. | 
+| `Unexpected bytes at 0x...` | APK другой сборки. Нужна версия 1.2.8.1 / versionCode 4823. | 
+| Скрипты заблокированы | Запускайте PowerShell с `-ExecutionPolicy Bypass`. | 
+| Интерфейс всё равно растягивается на 20:9 | Отключите принудительный полноэкранный режим для игры в настройках экрана. | 
 
 ### Правовая информация
 
-Это неофициальный фанатский проект. Он не связан с Rovio Entertainment или SEGA, не одобрен и не спонсируется ими. Angry Birds и все связанные названия, персонажи и материалы являются торговыми марками их владельцев.
-
-В репозитории не распространяются игровые ресурсы или APK. Патчер изменяет только копию игры, которая уже есть у вас. Используйте на свой риск.
+Это неофициальный фанатский проект. Он не связан с Rovio Entertainment или SEGA, не одобрен и не спонсируется ими. Angry Birds и все связанные названия, персонажи и материалы являются торговыми марками их владельцев. Используйте на свой риск.
 
 ### Благодарности
 
-- [apktool](https://github.com/iBotPeaches/Apktool) — распаковка и сборка APK
-- [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer) — выравнивание и подпись
-- [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) — анализ IL2CPP
+* [apktool](https://github.com/iBotPeaches/Apktool) — распаковка и сборка APK
+
+* [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer) — выравнивание и подпись
+
+* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) — анализ IL2CPP
