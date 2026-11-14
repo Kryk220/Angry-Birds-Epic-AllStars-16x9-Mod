@@ -46,8 +46,6 @@ The `armeabi-v7a` library is left untouched; use a 64-bit device.
 
 4. Install and launch the game.
 
-5. On tall 20:9 phones, keep the app in standard 16:9 / non-stretched mode if your system tries to force full-screen stretching (HyperOS: Settings → Display → Full screen mode → disable forced stretching for Angry Birds Epic).
-
 ### Build from the original All Stars APK (Optional)
 
 If you prefer to patch your own **Angry Birds Epic All Stars** APK file manually, build scripts are included in the repository:
@@ -201,8 +199,6 @@ This is an unofficial fan add-on for **Angry Birds Epic All Stars** and is not a
 3. Разрешите установку приложений из неизвестных источников для вашего файлового менеджера или браузера.
 
 4. Установите и запустите игру.
-
-5. На вытянутых экранах 20:9 убедитесь, что система не пытается принудительно растянуть игру за пределы 16:9 (в HyperOS: Настройки → Экран → Полноэкранный режим → отключите принудительное растягивание для Angry Birds Epic).
 
 ### Сборка патча из оригинального APK All Stars (необязательно)
 
